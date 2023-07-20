@@ -156,6 +156,7 @@ public extension EasyTipView {
         let initialAlpha = preferences.animating.showInitialAlpha
         let damping = preferences.animating.springDamping
         let velocity = preferences.animating.springVelocity
+        let addDismissalArea = preferences.dismissOnScreenTap && preferences.animating.dismissOnTap
         
         presentingView = view
         arrange(withinSuperview: superview)
@@ -164,9 +165,19 @@ public extension EasyTipView {
         alpha = initialAlpha
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        addGestureRecognizer(tap)
+        let dismissalArea = UIView()
         
-        superview.addSubview(self)
+        if addDismissalArea {
+            dismissalArea.frame = superview.frame
+            dismissalArea.backgroundColor = .clear
+            
+            dismissalArea.addSubview(self)
+            dismissalArea.addGestureRecognizer(tap)
+        } else {
+            addGestureRecognizer(tap)
+        }
+        
+        superview.addSubview(addDismissalArea ? dismissalArea : self)
         
         let animations : () -> () = {
             self.transform = finalTransform
@@ -189,6 +200,7 @@ public extension EasyTipView {
         
         let damping = preferences.animating.springDamping
         let velocity = preferences.animating.springVelocity
+        let isDismissalAreaEnabled = preferences.dismissOnScreenTap && preferences.animating.dismissOnTap
         
         UIView.animate(withDuration: preferences.animating.dismissDuration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: velocity, options: [.curveEaseInOut], animations: { 
             self.transform = self.preferences.animating.dismissTransform
@@ -196,6 +208,9 @@ public extension EasyTipView {
         }) { (finished) -> Void in
             completion?()
             self.delegate?.easyTipViewDidDismiss(self)
+            if isDismissalAreaEnabled {
+                self.superview?.removeFromSuperview()
+            }
             self.removeFromSuperview()
             self.transform = CGAffineTransform.identity
         }
@@ -266,6 +281,8 @@ open class EasyTipView: UIView {
         public var hasShadow : Bool {
             return drawing.shadowOpacity > 0 && drawing.shadowColor != UIColor.clear
         }
+        
+        public var dismissOnScreenTap   = false
         
         public init() {}
     }
