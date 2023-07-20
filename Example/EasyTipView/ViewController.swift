@@ -37,6 +37,7 @@ class ViewController: UIViewController, EasyTipViewDelegate {
     @IBOutlet weak var buttonE: UIButton!
     @IBOutlet weak var buttonF: UIButton!
     @IBOutlet weak var buttonG: UIButton!
+    @IBOutlet weak var buttonH: UIButton!
     
     weak var tipView: EasyTipView?
     
@@ -211,6 +212,24 @@ class ViewController: UIViewController, EasyTipViewDelegate {
             EasyTipView.show(forView: self.buttonG,
                              contentView: contentView,
                              preferences: preferences)
+            
+        case buttonH:
+            
+            var preferences = EasyTipView.globalPreferences
+            preferences.drawing.backgroundColor = buttonH.backgroundColor!
+
+            preferences.animating.dismissTransform = CGAffineTransform(translationX: 0, y: -15)
+            preferences.animating.showInitialTransform = CGAffineTransform(translationX: 0, y: 15)
+            preferences.animating.showInitialAlpha = 0
+            preferences.animating.showDuration = 1
+            preferences.animating.dismissDuration = 1
+            preferences.drawing.arrowPosition = .bottom
+            preferences.dismissOnScreenTap = true
+
+            preferences.positioning.contentInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+            
+            let view = EasyTipView(text: "Tap on every place of the screen will dismiss.", preferences: preferences)
+            view.show(forView: buttonH, withinSuperview: self.navigationController?.view!)
 
         default:
 
