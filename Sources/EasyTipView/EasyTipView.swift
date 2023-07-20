@@ -330,6 +330,10 @@ open class EasyTipView: UIView {
     fileprivate(set) open var preferences: Preferences
     private let content: Content
     
+    open var isShowingTip: Bool {
+        return alpha == 1
+    }
+    
     // MARK: - Lazy variables -
     
     fileprivate lazy var contentSize: CGSize = {
