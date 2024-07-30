@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+//Used as submodule in Openlane Seller app pod
+
 #if canImport(UIKit)
 import UIKit
 
